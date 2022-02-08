@@ -1,13 +1,14 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { filteredTodoListState } from '../store/todoStore';
+import { filteredTodoListState, useStore } from '../store/useTodoStore';
 import TodoItemCreator from './TodoItemCreator';
 import TodoItem from './TodoItem';
 import TodoListFilters from './TodoListFilters';
 import TodoListStats from './TodoListStats';
 
 const TodoList = () => {
-  const todoList = useRecoilValue(filteredTodoListState);
+  // const todoList = useRecoilValue(filteredTodoListState);
+  const todoList = useStore((state) => state.filteredTodoListState());
 
   return (
     <>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { todoListState } from '../store/todoStore';
+import { todoListState, useStore } from '../store/useTodoStore';
 
 function replaceItemAtIndex(arr, index, newValue) {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
@@ -11,7 +11,8 @@ function removeItemAtIndex(arr, index) {
 }
 
 const TodoItem = ({ item }) => {
-  const [todoList, setTodoList] = useRecoilState(todoListState);
+  // const [todoList, setTodoList] = useRecoilState(todoListState);
+  const { todoListState: todoList, setTodoList } = useStore((state) => state);
   const index = todoList.findIndex((listItem) => listItem === item);
 
   const editItemText = ({ target: { value } }) => {
