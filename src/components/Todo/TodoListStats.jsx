@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { todoListStatsState, useStore } from '../store/useTodoStore';
+import { todoListStatsState, useStore } from '../../store/useTodoStore';
 
 const TodoListStats = () => {
   // const { totalNum, totalCompletedNum, totalUncompletedNum, percentCompleted } =

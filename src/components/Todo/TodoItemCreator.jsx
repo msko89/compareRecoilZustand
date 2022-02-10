@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useSetRecoilState } from 'recoil';
-import { todoListState, useStore } from '../store/useTodoStore';
+import { todoListState, useStore } from '../../store/useTodoStore';
 
 const TodoItemCreator = () => {
   const [inputValue, setInputValue] = useState('');

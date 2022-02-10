@@ -1,1 +1,14 @@
+header {
+  display: flex;
+  justify-content: flex-end;
 
+  svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  button {
+    width: 100px;
+    height: 50px;
+  }
+}

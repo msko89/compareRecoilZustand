@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { filteredTodoListState, useStore } from '../store/useTodoStore';
+import { filteredTodoListState, useStore } from '../../store/useTodoStore';
 import TodoItemCreator from './TodoItemCreator';
 import TodoItem from './TodoItem';
 import TodoListFilters from './TodoListFilters';
