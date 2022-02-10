@@ -1,10 +1,12 @@
 import { RecoilRoot } from 'recoil';
+import Editor from './components/Editor/Editor';
 import TodoList from './components/TodoList';
 
 function App() {
   return (
     <RecoilRoot>
-      <TodoList />
+      {/* <TodoList /> */}
+      <Editor />
     </RecoilRoot>
   );
 }
