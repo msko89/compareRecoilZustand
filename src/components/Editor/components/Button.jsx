@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
 import { buttonShapeState } from '../../../store/useButton';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { sectionListState } from '../../../store/useSection';
+import { historyIndexState, historyListState } from '../../../store/useHistory';
 import {
   MdOutlineAlignHorizontalLeft,
   MdOutlineAlignHorizontalCenter,
@@ -89,7 +90,9 @@ const Button = ({ text = '버튼', ...rest }) => {
   const [isClick, setClick] = useState(false);
   const buttonShape = useRecoilValue(buttonShapeState);
   const buttonAlign = rest.options.buttonAlign;
-  const setSectionList = useSetRecoilState(sectionListState);
+  const [sectionList, setSectionList] = useRecoilState(sectionListState);
+  const setHistoryIndex = useSetRecoilState(historyIndexState);
+  const setHistoryList = useSetRecoilState(historyListState);
 
   const handleMouseEnter = () => setMouseEnter(true);
   const handleMouseLeave = () => setMouseEnter(false);
@@ -103,21 +106,43 @@ const Button = ({ text = '버튼', ...rest }) => {
 
     const currentButtonShape = event.currentTarget.value;
 
-    setSectionList((sectionList) =>
-      sectionList.map((section) => {
-        if (section.id === rest.id) {
-          return {
-            ...section,
-            options: {
-              ...section.options,
-              buttonAlign: currentButtonShape,
-            },
-          };
-        } else {
-          return section;
-        }
-      })
-    );
+    const newSectionList = sectionList.map((section) => {
+      if (section.id === rest.id) {
+        return {
+          ...section,
+          options: {
+            ...section.options,
+            prevButtonAlign: section.options.buttonAlign,
+            buttonAlign: currentButtonShape,
+          },
+        };
+      }
+
+      return section;
+    });
+
+    updateStore(newSectionList, currentButtonShape);
+  };
+
+  const updateStore = (newSectionList, currentButtonShape) => {
+    setSectionList(newSectionList);
+
+    setHistoryIndex((historyIndex) => historyIndex + 1);
+
+    setHistoryList((historyList) => [
+      ...historyList,
+      {
+        ...historyList.find((history) => history.id === rest.id),
+        ...{
+          kind: 'option',
+          options: {
+            ...rest.options,
+            prevButtonAlign: rest.options.buttonAlign,
+            buttonAlign: currentButtonShape,
+          },
+        },
+      },
+    ]);
   };
 
   return (

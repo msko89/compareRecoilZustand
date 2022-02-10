@@ -24,7 +24,7 @@ const Panel = () => {
   const buttonShape = useRecoilValue(buttonShapeState);
 
   const addButton = () => {
-    const addButtonObject = {
+    updateStore({
       id: uuidv4(),
       type: 'button',
       kind: 'section',
@@ -32,25 +32,19 @@ const Panel = () => {
         buttonShape,
         buttonAlign: 'center',
       },
-    };
-
-    setSectionList((sectionList) => [...sectionList, addButtonObject]);
-
-    updateHistoryStore(addButtonObject);
+    });
   };
 
   const addLine = () => {
-    const addLineObject = {
+    updateStore({
       id: uuidv4(),
       type: 'line',
       kind: 'section',
-    };
-
-    setSectionList((sectionList) => [...sectionList, addLineObject]);
-    updateHistoryStore(addLineObject);
+    });
   };
 
-  const updateHistoryStore = (addObject) => {
+  const updateStore = (addObject) => {
+    setSectionList((sectionList) => [...sectionList, addObject]);
     setHistoryIndex((historyIndex) => historyIndex + 1);
 
     setHistoryList((historyList) => [
