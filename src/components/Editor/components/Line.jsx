@@ -16,7 +16,7 @@ const LineLayout = styled.div`
 
 const LineElement = styled.div`
   border: 1px solid #000;
-  margin: 30px 0;
+  margin: 100px 0;
   width: 100px;
 `;
 

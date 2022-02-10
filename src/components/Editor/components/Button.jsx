@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled/macro';
 import { buttonShapeState } from '../../../store/useButton';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { sectionListState } from '../../../store/useSection';
+import {
+  MdOutlineAlignHorizontalLeft,
+  MdOutlineAlignHorizontalCenter,
+  MdOutlineAlignHorizontalRight,
+} from 'react-icons/md';
+
+const ButtonContainer = styled.div`
+  position: relative;
+  display: flex;
+  width: 300px;
+  justify-content: ${({ buttonAlign }) => buttonAlign};
+`;
 
 const ButtonLayout = styled.div`
   position: relative;
   width: 100px;
   height: 100px;
   border: 1px solid #000;
-  margin: 50px auto;
+  margin: 50px 0;
   border-radius: ${({ buttonShape }) =>
     buttonShape === 'circle' ? '50%' : buttonShape === 'rounded' ? '20%' : 0};
 
   &:before {
-    display: ${({ isMouseOver }) => !isMouseOver && 'none'};
+    display: ${({ isMouseEnter, isClick }) =>
+      (!isMouseEnter || isClick) && 'none'};
     position: absolute;
     width: 150px;
     top: -25px;
@@ -38,24 +52,107 @@ const ButtonText = styled.span`
   height: 100%;
 `;
 
-const Button = ({ text = '버튼' }) => {
+const ButtonOptionLayout = styled.div`
+  position: absolute;
+  top: -10px;
+  display: ${({ isMouseEnter, isClick }) => (isClick ? 'flex' : 'none')};
+  align-items: center;
+  height: 50px;
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 24%);
+`;
+
+const ButtonOption = styled.button`
+  width: 50px;
+  height: 50px;
+  border: none;
+  background-color: ${({ buttonAlign, value }) =>
+    buttonAlign === value ? '#2156fa' : '#fff'};
+  color: ${({ buttonAlign, value }) =>
+    buttonAlign === value ? '#fff' : '#2d2f2f'};
+`;
+
+const buttons = [
+  {
+    type: 'flex-start',
+  },
+  {
+    type: 'center',
+  },
+  {
+    type: 'flex-end',
+  },
+];
+
+const Button = ({ text = '버튼', ...rest }) => {
   const [isMouseEnter, setMouseEnter] = useState(false);
+  const [isClick, setClick] = useState(false);
   const buttonShape = useRecoilValue(buttonShapeState);
+  const buttonAlign = rest.options.buttonAlign;
+  const setSectionList = useSetRecoilState(sectionListState);
 
   const handleMouseEnter = () => setMouseEnter(true);
   const handleMouseLeave = () => setMouseEnter(false);
+  const handleClick = () => {
+    setMouseEnter(false);
+    setClick(true);
+  };
+
+  const handleButtonAlign = (event) => {
+    event.stopPropagation();
+
+    const currentButtonShape = event.currentTarget.value;
+
+    setSectionList((sectionList) =>
+      sectionList.map((section) => {
+        if (section.id === rest.id) {
+          return {
+            ...section,
+            options: {
+              ...section.options,
+              buttonAlign: currentButtonShape,
+            },
+          };
+        } else {
+          return section;
+        }
+      })
+    );
+  };
 
   return (
-    <ButtonLayout
-      isMouseOver={isMouseEnter}
-      buttonShape={buttonShape}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <ButtonLink>
-        <ButtonText>{text}</ButtonText>
-      </ButtonLink>
-    </ButtonLayout>
+    <ButtonContainer buttonAlign={buttonAlign}>
+      <ButtonOptionLayout isMouseEnter={isMouseEnter} isClick={isClick}>
+        {buttons.map((button) => (
+          <ButtonOption
+            key={button.type}
+            buttonAlign={buttonAlign}
+            value={button.type}
+            onClick={handleButtonAlign}
+          >
+            {button.type === 'flex-start' ? (
+              <MdOutlineAlignHorizontalLeft size={30} />
+            ) : button.type === 'center' ? (
+              <MdOutlineAlignHorizontalCenter size={30} />
+            ) : (
+              <MdOutlineAlignHorizontalRight size={30} />
+            )}
+          </ButtonOption>
+        ))}
+      </ButtonOptionLayout>
+      <ButtonLayout
+        isMouseEnter={isMouseEnter}
+        isClick={isClick}
+        buttonShape={buttonShape}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+      >
+        <ButtonLink>
+          <ButtonText>{text}</ButtonText>
+        </ButtonLink>
+      </ButtonLayout>
+    </ButtonContainer>
   );
 };
 

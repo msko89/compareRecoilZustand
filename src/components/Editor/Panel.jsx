@@ -30,6 +30,7 @@ const Panel = () => {
       kind: 'section',
       options: {
         buttonShape,
+        buttonAlign: 'center',
       },
     };
 

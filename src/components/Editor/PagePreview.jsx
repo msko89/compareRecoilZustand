@@ -13,7 +13,7 @@ const PagePreview = () => {
       <section>
         {sectionList.map((section) =>
           section.type === 'button' ? (
-            <Button key={section.id} />
+            <Button key={section.id} {...section} />
           ) : (
             <Line key={section.id} />
           )
